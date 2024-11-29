@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * This is a basic implementation of a {@link User}.
  * 
- * This class is completely mplemented and can be used as it is.
+ * This class is completely implemented and can be used as it is.
  * 
  */
 public class UserImpl implements User {

@@ -36,9 +36,11 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      * In order to save the people followed by a user organized in groups, adopt
      * a generic-type Map:  think of what type of keys and values would best suit the requirements
      */
+    private final Map<String,Set<U>> friends;
 
     /*
      * [CONSTRUCTORS]
+     * 
      *
      * 1) Complete the definition of the constructor below, for building a user
      * participating in a social network, with 4 parameters, initializing:
@@ -48,6 +50,8 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      * - username
      * - age and every other necessary field
      */
+ 
+    
     /**
      * Builds a user participating in a social network.
      *
@@ -61,14 +65,18 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *            alias of the user, i.e. the way a user is identified on an
      *            application
      */
-    public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
-        super(null, null, null, 0);
+    public SocialNetworkUserImpl(final String name, final String lastName, final String username, final int userAge){
+        super(name,lastName,username,userAge);
+        this.friends = new HashMap<>();
     }
-
     /*
      * 2) Define a further constructor where the age defaults to -1
      */
 
+     public SocialNetworkUserImpl(final String name, final String lastName, final String username){
+        super(name,lastName,username,-1);
+        this.friends = new HashMap<>();
+     }
     /*
      * [METHODS]
      *
@@ -76,7 +84,13 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        Set<U> groupCircle = this.friends.get(circle);
+        if(groupCircle == null){
+            groupCircle = new HashSet<>();
+            this.friends.put(circle,groupCircle);
+        }
+        return groupCircle.add(user);
+
     }
 
     /**
@@ -86,11 +100,20 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+        final Collection<U> group = this.friends.get(groupName);
+        if(group == null) return Collections.emptyList();
+        else{
+            return new ArrayList<>(group);
+        }
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+         Set<U> followedUsers = new HashSet<>();
+        for(Set<U> Group : this.friends.values()){
+            followedUsers.addAll(Group);
+        }
+        return new ArrayList<>(followedUsers);
+            
     }
 }
